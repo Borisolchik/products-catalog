@@ -20,7 +20,7 @@
 
         <div class="qr-code">
           <h2>QR code for the product</h2>
-          <QRCodeVue :value="`${baseUrl}/products/${product.id}`" />
+          <QRCodeVue :value="`${baseURL}/products/${product.id}`" />
         </div>
       </div>
     </div>
