@@ -11,4 +11,9 @@ export default defineNuxtConfig({
     plugins: [tsconfigPaths()],
   },
   modules: ["@pinia/nuxt"],
+  runtimeConfig: {
+    public: {
+      apiBase: "https://dummyjson.com",
+    },
+  },
 });

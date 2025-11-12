@@ -32,14 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import { useProductsStore } from "@/stores/products";
 import type { Product } from "@/types/product";
 import QRCodeVue from "qrcode.vue";
 
 const config = useRuntimeConfig();
-const baseUrl = config.public.baseURL || "http://localhost:3000";
+const baseURL = config.public.apiBase;
 const error = ref<string | null>(null);
 
 const productsStore = useProductsStore();
@@ -53,7 +52,7 @@ const fetchProduct = async (id: number) => {
     if (found) {
       product.value = found;
     } else {
-      const res = await $fetch<Product>(`https://dummyjson.com/products/${id}`);
+      const res = await $fetch<Product>(`${baseURL}/products/${id}`);
       product.value = res;
     }
   } catch (err) {

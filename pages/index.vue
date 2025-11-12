@@ -57,11 +57,13 @@
 <script setup lang="ts">
 import { useProductsStore } from "@/stores/products";
 import { storeToRefs } from "pinia";
-import { onMounted, onServerPrefetch, watch, onUnmounted } from "vue";
+import { onMounted, onServerPrefetch, onUnmounted, watch } from "vue";
 
 const productsStore = useProductsStore();
 const { searchQuery, selectedCategory, filteredProducts, categories } =
   storeToRefs(productsStore);
+
+let storeReady = false;
 
 onServerPrefetch(async () => {
   await productsStore.fetchCategories();
@@ -73,6 +75,20 @@ onMounted(async () => {
     await productsStore.fetchCategories();
     await productsStore.fetchProducts();
   }
+
+  storeReady = true;
+
+  watch(searchQuery, async (newQuery) => {
+    if (storeReady) {
+      await productsStore.setSearchQuery(newQuery);
+    }
+  });
+
+  watch(selectedCategory, async (newCategory) => {
+    if (storeReady) {
+      await productsStore.setCategory(newCategory);
+    }
+  });
 
   window.addEventListener("scroll", handleScroll);
 });
@@ -89,14 +105,6 @@ function handleScroll() {
     productsStore.loadMoreProducts();
   }
 }
-
-watch(searchQuery, async (newQuery) => {
-  await productsStore.setSearchQuery(newQuery);
-});
-
-watch(selectedCategory, async (newCategory) => {
-  await productsStore.setCategory(newCategory);
-});
 </script>
 
 <style scoped>
@@ -140,7 +148,9 @@ h1 {
   background-position: right 12px center;
   background-size: 16px 16px;
   cursor: pointer;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .filters select:hover {
@@ -168,7 +178,9 @@ h1 {
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
   background-color: white;
 }
 

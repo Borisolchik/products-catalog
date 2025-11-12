@@ -3,6 +3,8 @@ import { ref, computed } from "vue";
 import type { Product, Category } from "@/types/product";
 
 export const useProductsStore = defineStore("products", () => {
+  const config = useRuntimeConfig();
+  const baseURL = config.public.apiBase;
   const products = ref<Product[]>([]);
   const categories = ref<Category[]>([]);
   const searchQuery = ref("");
@@ -29,7 +31,7 @@ export const useProductsStore = defineStore("products", () => {
   const fetchCategories = async () => {
     try {
       const res = await $fetch<{ slug: string; name: string; url: string }[]>(
-        "https://dummyjson.com/products/categories"
+        `${baseURL}/products/categories`,
       );
       categories.value = res.map((cat, index) => ({
         id: index,
@@ -60,13 +62,13 @@ export const useProductsStore = defineStore("products", () => {
       let url = "";
 
       if (selectedCategory.value) {
-        url = `https://dummyjson.com/products/category/${selectedCategory.value}?limit=${limit.value}&skip=${skip}`;
+        url = `${baseURL}/products/category/${selectedCategory.value}?limit=${limit.value}&skip=${skip}`;
       } else if (searchQuery.value) {
-        url = `https://dummyjson.com/products/search?q=${encodeURIComponent(
-          searchQuery.value
+        url = `${baseURL}/products/search?q=${encodeURIComponent(
+          searchQuery.value,
         )}&limit=${limit.value}&skip=${skip}`;
       } else {
-        url = `https://dummyjson.com/products?limit=${limit.value}&skip=${skip}`;
+        url = `${baseURL}/products?limit=${limit.value}&skip=${skip}`;
       }
 
       const res = await $fetch<{ products: Product[]; total: number }>(url);
