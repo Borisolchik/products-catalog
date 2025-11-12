@@ -20,7 +20,7 @@
 
         <div class="qr-code">
           <h2>QR code for the product</h2>
-          <QRCodeVue :value="`${baseUrl}/products/${product.id}`" />
+          <QRCodeVue :value="`${baseURL}/products/${product.id}`" />
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ import type { Product } from "@/types/product";
 import QRCodeVue from "qrcode.vue";
 
 const config = useRuntimeConfig();
-const baseUrl = ref(config.public.apiBase);
+const baseURL = ref(config.public.apiBase);
 const error = ref<string | null>(null);
 
 const productsStore = useProductsStore();
