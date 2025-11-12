@@ -38,7 +38,7 @@ import type { Product } from "@/types/product";
 import QRCodeVue from "qrcode.vue";
 
 const config = useRuntimeConfig();
-const baseURL = config.public.apiBase;
+const baseURL = ref(config.public.apiBase);
 const error = ref<string | null>(null);
 
 const productsStore = useProductsStore();
